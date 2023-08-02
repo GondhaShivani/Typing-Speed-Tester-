@@ -6,7 +6,7 @@ const theTimer = document.querySelector(".timer");
 const accuracyLabel = document.querySelector(".accuracy");
 const wordsPerMinuteLabel = document.querySelector(".wpm");
 
-var timer = [0,0,0,0];
+var timer = [0, 0, 0, 0];
 var interval;
 var wpmInterval;
 var timerRunning = false;
@@ -17,31 +17,36 @@ var wpm;
 
 // Add leading zero to numbers 9 or below (purely for aesthetics):
 function leadingZero(time) {
-    if (time <= 9) {
-        time = "0" + time;
-    }
-    return time;
+  if (time <= 9) {
+    time = "0" + time;
+  }
+  return time;
 }
 
 // Run a standard minute/second/hundredths timer:
 function runTimer() {
-    let currentTime = leadingZero(timer[0]) + ":" + leadingZero(timer[1]) + ":" + leadingZero(timer[2]);
-    theTimer.innerHTML = currentTime;
-    timer[3]++;
+  let currentTime =
+    leadingZero(timer[0]) +
+    ":" +
+    leadingZero(timer[1]) +
+    ":" +
+    leadingZero(timer[2]);
+  theTimer.innerHTML = currentTime;
+  timer[3]++;
 
-    timer[0] = Math.floor((timer[3]/100)/60);
-    timer[1] = Math.floor((timer[3]/100) - (timer[0] * 60));
-    timer[2] = Math.floor(timer[3] - (timer[1] * 100) - (timer[0] * 6000));
+  timer[0] = Math.floor(timer[3] / 100 / 60);
+  timer[1] = Math.floor(timer[3] / 100 - timer[0] * 60);
+  timer[2] = Math.floor(timer[3] - timer[1] * 100 - timer[0] * 6000);
 
-    timeElapsed = timer[0]*60 + timer[1];
+  timeElapsed = timer[0] * 60 + timer[1];
 }
 
 // Finds words per minute
 function wordsPerMinute() {
   if (timeElapsed > 0) {
-    var grossWpm = Math.floor((testArea.value.length/5) / (timeElapsed/60));
+    var grossWpm = Math.floor(testArea.value.length / 5 / (timeElapsed / 60));
     console.log(grossWpm);
-    wpm = Math.floor(((testArea.value.length/5) - errors)/(timeElapsed/60));
+    wpm = Math.floor((testArea.value.length / 5 - errors) / (timeElapsed / 60));
     console.log(wpm);
     if (wpm < 0) {
       wordsPerMinuteLabel.innerHTML = 0 + " WPM";
@@ -54,61 +59,60 @@ function wordsPerMinute() {
 
 // Finds the accuracy
 function accuracy(grossWpm) {
-  let accuracy = Math.floor(wpm/grossWpm*100);
+  let accuracy = Math.floor((wpm / grossWpm) * 100);
   if (accuracy < 0) {
-    accuracyLabel.innerHTML = 0+"%";
+    accuracyLabel.innerHTML = 0 + "%";
   } else {
-    accuracyLabel.innerHTML = accuracy+"%";
+    accuracyLabel.innerHTML = accuracy + "%";
   }
   console.log(accuracy);
 }
 
 // Match the text entered with the provided text on the page:
 function spellCheck() {
-    let textEntered = testArea.value;
-    let originTextMatch = originText.substring(0,textEntered.length);
+  let textEntered = testArea.value;
+  let originTextMatch = originText.substring(0, textEntered.length);
 
-
-    if (textEntered == originText) {
-        clearInterval(interval);
-        clearInterval(wpmInterval);
-        testWrapper.style.borderColor = "#429890"; //Green
+  if (textEntered == originText) {
+    clearInterval(interval);
+    clearInterval(wpmInterval);
+    testWrapper.style.borderColor = "#429890"; //Green
+  } else {
+    if (textEntered == originTextMatch) {
+      testWrapper.style.borderColor = "#65CCf3"; //Blue
     } else {
-        if (textEntered == originTextMatch) {
-            testWrapper.style.borderColor = "#65CCf3"; //Blue
-        } else {
-            errors++;
-            if (!(event.keyCode === 8)) {
-              testWrapper.style.borderColor = "#E95D0F"; //Orange
-            } else {
-              errors--;
-            }
-        }
+      errors++;
+      if (!(event.keyCode === 8)) {
+        testWrapper.style.borderColor = "#E95D0F"; //Orange
+      } else {
+        errors--;
+      }
     }
+  }
 }
 
 // Start the timer:
 function start() {
-    let textEnteredLength = testArea.value.length;
-    if (textEnteredLength === 0 && !timerRunning) {
-        timerRunning = true;
-        interval = setInterval(runTimer, 10);
-        wpmInterval = setInterval(wordsPerMinute, 1000);
-    }
+  let textEnteredLength = testArea.value.length;
+  if (textEnteredLength === 0 && !timerRunning) {
+    timerRunning = true;
+    interval = setInterval(runTimer, 10);
+    wpmInterval = setInterval(wordsPerMinute, 1000);
+  }
 }
 
 //Generates a new paragraph:
-  function randomParagraphGenerator() {
-    let par1 = "Hello, Good Morning.";
-    let par2 = "Have a Good Day :)";
-    let par3 = "She hurriedly packed her bags for the weekend getaway.";
-    let par4 = "The old bridge creaked as the heavy truck passed over it.";
-    let par5 = "The sky is clear, and the sun shines brightly.";
-    let par6 = "The city lights glittered like stars in the night sky.";
-    let par7 = "The chef skillfully prepared a delicious gourmet meal.";
-    let par8 = "They hiked through the dense forest, enjoying the fresh air.";
-    let par9 = "The children laughed and played at the colorful playground.";
-    let par10 = "The sky is clear, and the sun shines brightly.";
+function randomParagraphGenerator() {
+  let par1 = "Hello, Good Morning.";
+  let par2 = "Have a Good Day :)";
+  let par3 = "She hurriedly packed her bags for the weekend getaway.";
+  let par4 = "The old bridge creaked as the heavy truck passed over it.";
+  let par5 = "The sky is clear, and the sun shines brightly.";
+  let par6 = "The city lights glittered like stars in the night sky.";
+  let par7 = "The chef skillfully prepared a delicious gourmet meal.";
+  let par8 = "They hiked through the dense forest, enjoying the fresh air.";
+  let par9 = "The children laughed and played at the colorful playground.";
+  let par10 = "The sky is clear, and the sun shines brightly.";
 
   switch (Math.floor(Math.random() * 10)) {
     case 0:
@@ -156,23 +160,23 @@ function start() {
 
 // Reset everything:
 function reset() {
-    clearInterval(interval);
-    clearInterval(wpmInterval);
-    interval = null;
-    wpmInterval = null;
-    timer = [0,0,0,0];
-    timerRunning = false;
-    wpm = 0 + " WPM";
-    timeElapsed = 0;
-    errors = 0;
+  clearInterval(interval);
+  clearInterval(wpmInterval);
+  interval = null;
+  wpmInterval = null;
+  timer = [0, 0, 0, 0];
+  timerRunning = false;
+  wpm = 0 + " WPM";
+  timeElapsed = 0;
+  errors = 0;
 
-    testArea.value = "";
-    testArea.disabled = false;
-    theTimer.innerHTML = "00:00:00";
-    testWrapper.style.borderColor = "grey";
-    accuracyLabel.innerHTML = "100%";
-    wordsPerMinuteLabel.innerHTML = wpm;
-    randomParagraphGenerator();
+  testArea.value = "";
+  testArea.disabled = false;
+  theTimer.innerHTML = "00:00:00";
+  testWrapper.style.borderColor = "grey";
+  accuracyLabel.innerHTML = "100%";
+  wordsPerMinuteLabel.innerHTML = wpm;
+  randomParagraphGenerator();
 }
 
 // Event listeners for keyboard input and the reset
